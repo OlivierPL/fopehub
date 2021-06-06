@@ -1,0 +1,1603 @@
+--Jailbreak Script Here //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+repeat wait() until game:IsLoaded() == true
+
+function Notif(Text,Time)
+require(game:GetService("ReplicatedStorage").Game.Notification).SetColor(Color3.fromRGB(0,0,0))
+require(game:GetService("ReplicatedStorage").Game.Notification).new({
+    Text = Text,
+    Duration = Time
+})
+end
+
+--Auto Hasher
+
+local HasherClient = {
+Modules = {
+    HashTable = '',
+    DonutFunc = '',
+    KickFunc = '',
+    HeliFunc = '',
+    ExplodeWallFunc = ''
+},
+Hashes = {
+    Donut1 = '',   
+    Donut2 = '',    
+    KickHash = '',  
+    Team = '',      
+    GiftSafe = '',  
+    HeliCrate = '', 
+    Interact = '',  
+    Eject = '',     
+    Taze = '',      
+    GrabGun = ''    
+}
+}
+
+--Collect All Hashes
+
+for i,v in pairs(getgc(true)) do
+if HasherClient.Modules.HashTable == '' and type(v) == 'table' then
+    for i2,v2 in pairs(v) do
+        if type(v2) == 'string' and v2:sub(1,1) == '!' and v2:len() > 10 then
+            HasherClient.Modules.HashTable = v
+        end
+    end
+end
+--Donut1 Func
+if HasherClient.Modules.DonutFunc == '' and type(v) == 'table' and rawget(v,'Fun') and rawget(v,'Part') and type(v.Fun) == 'function' and v.Part.Name == 'Donut' then
+    HasherClient.Modules.DonutFunc = v.Fun
+end
+if HasherClient.Modules.KickFunc == '' and type(v) == 'function' and getfenv(v).script and getfenv(v).script == game:GetService('Players').LocalPlayer.PlayerScripts.LocalScript then
+    if debug.getconstants(v) and table.find(debug.getconstants(v),'FailedPcall') then
+        HasherClient.Modules.KickFunc = v
+    end
+end
+if HasherClient.Modules.HeliFunc == '' and type(v) == 'table' and type(rawget(v, "Heli")) == "table" then
+    HasherClient.Modules.HeliFunc = v.Heli.Update
+end
+if HasherClient.Modules.ExplodeWallFunc == ''  and type(v) == 'function' and getfenv(v).script and getfenv(v).script == game:GetService('Players').LocalPlayer.PlayerScripts.LocalScript then
+    if debug.getconstants(v) and table.find(debug.getconstants(v),'ExplodeWall') and table.find(debug.getconstants(v),'FireServer') then
+        HasherClient.Modules.ExplodeWallFunc = v
+    end
+end
+end
+
+--Donut 1
+Donut1Constants = {}
+for i,v in pairs(getconstants(HasherClient.Modules.DonutFunc)) do
+if type(v) == 'string' and v ~= 'sub' and v ~= 'reverse' and v ~= 'Name' and v ~= 'tick' and v ~= 'FireServer' then
+    table.insert(Donut1Constants, v)
+end
+end
+local FF_Donut1Constants = Donut1Constants[1]
+local LL_Donut1Constants = Donut1Constants[table.maxn(Donut1Constants)]
+for i, v in pairs(HasherClient.Modules.HashTable) do
+if string.find(i, FF_Donut1Constants) and string.find(i, LL_Donut1Constants) and FF_Donut1Constants:sub(1,1) == i:sub(1,1) and LL_Donut1Constants:sub(#LL_Donut1Constants,#LL_Donut1Constants) == i:sub(#i,#i) then
+    HasherClient.Hashes.Donut1 = i
+    break
+end
+end
+
+--Donut 2
+
+Donut2Func = getproto(require(game:GetService("ReplicatedStorage").Game.Item.Donut).InputBegan, 1)
+Donut2Constants = {}
+for i,v in pairs(getconstants(Donut2Func)) do
+if type(v) == 'string' and v ~= 'sub' and v ~= 'reverse' and v ~= 'Name' and v ~= 'tick' and v ~= 'FireServer' and v ~= 'SpringItemRotation' and v ~= 'Config' and v ~= 'Motion' and v ~= 'Hip' and v ~= 'Springs' and v ~= 'ItemRotation' and v ~= 'SetTarget' and v ~= 'Local' and v ~= 'LastConsumed' then
+    table.insert(Donut2Constants, v)
+end
+end
+local FF_Donut2Constants = Donut2Constants[1]
+local LL_Donut2Constants = Donut2Constants[table.maxn(Donut2Constants)]
+for i, v in pairs(HasherClient.Modules.HashTable) do
+if string.find(i, FF_Donut2Constants) and string.find(i, LL_Donut2Constants) and FF_Donut2Constants:sub(1,1) == i:sub(1,1) and LL_Donut2Constants:sub(#LL_Donut2Constants,#LL_Donut2Constants) == i:sub(#i,#i) then
+    HasherClient.Hashes.Donut2 = i
+    break
+end
+end
+
+--KickHash
+
+KickHashConstants = {}
+for i,v in pairs(getconstants(HasherClient.Modules.KickFunc)) do
+if type(v) == 'string' and v ~= 'sub' and v ~= 'reverse' and v ~= 'Name' and v ~= 'tick' and v ~= 'FireServer' and v ~= 'FailedPcall' and v ~= 'pcall' and v ~= '' then
+    table.insert(KickHashConstants, v)
+end
+end
+local FF_KickHashConstants = KickHashConstants[1]
+local LL_KickHashConstants = KickHashConstants[table.maxn(KickHashConstants)]
+for i, v in pairs(HasherClient.Modules.HashTable) do
+if string.find(i, FF_KickHashConstants) and string.find(i, LL_KickHashConstants) and FF_KickHashConstants:sub(1,1) == i:sub(1,1) and LL_KickHashConstants:sub(#LL_KickHashConstants,#LL_KickHashConstants) == i:sub(#i,#i) then
+    HasherClient.Hashes.KickHash = i
+    break
+end
+end
+
+--Team
+
+TeamFunc = getproto(require(game:GetService("ReplicatedStorage").Game.TeamChooseUI).Show,6)
+TeamConstants = {}
+for i,v in pairs(getconstants(TeamFunc)) do
+if type(v) == 'string' and v ~= 'sub' and v ~= 'reverse' and v ~= 'Name' and v ~= 'tick' and v ~= 'FireServer' and v ~= 'Police' and v ~= 'Prisoner' and v ~= 'assert' and v ~= '' then
+    table.insert(TeamConstants, v)
+end
+end
+local FF_TeamConstants = TeamConstants[1]
+local LL_TeamConstants = TeamConstants[table.maxn(TeamConstants)]
+for i, v in pairs(HasherClient.Modules.HashTable) do
+if string.find(i, FF_TeamConstants) and string.find(i, LL_TeamConstants) and FF_TeamConstants:sub(1,1) == i:sub(1,1) and LL_TeamConstants:sub(#LL_TeamConstants,#LL_TeamConstants) == i:sub(#i,#i) then
+    HasherClient.Hashes.Team = i
+    break
+end
+end
+
+--GiftSafe
+SafeFunc = getproto(require(game:GetService("ReplicatedStorage").Game.SafesUI).SetupBuySafes,3)
+SafeConstants = {}
+for i,v in pairs(getconstants(SafeFunc)) do
+if type(v) == 'string' and v ~= 'sub' and v ~= 'reverse' and v ~= 'Name' and v ~= 'tick' and v ~= 'FireServer' and v ~= '' and v ~= 'ContainerPlayerName' and v ~= 'PlayerName' and v ~= 'Text' and v ~= 'SelectedTier' and v ~= 'ContainerIcon' and v ~= 'Icon' and v ~= 'Image' and v ~= 'CloseGift' then
+    table.insert(SafeConstants, v)
+end
+end
+local FF_SafeConstants = SafeConstants[1]
+local LL_SafeConstants = SafeConstants[table.maxn(SafeConstants)]
+for i, v in pairs(HasherClient.Modules.HashTable) do
+if string.find(i, FF_SafeConstants) and string.find(i, LL_SafeConstants) and FF_SafeConstants:sub(1,1) == i:sub(1,1) and LL_SafeConstants:sub(#LL_SafeConstants,#LL_SafeConstants) == i:sub(#i,#i) then
+    HasherClient.Hashes.GiftSafe = i
+end
+end
+
+--HeliCrate
+
+HeliCrateConstants = {}
+for i,v in pairs(getconstants(HasherClient.Modules.HeliFunc)) do  
+if i > table.find(getconstants(HasherClient.Modules.HeliFunc), "PointToObjectSpace") and i < table.find(getconstants(HasherClient.Modules.HeliFunc), "FireServer") then
+    table.insert(HeliCrateConstants, v)
+end
+end
+local FF_HeliCrateConstants = HeliCrateConstants[1]
+local LL_HeliCrateConstants = HeliCrateConstants[table.maxn(HeliCrateConstants)]
+for i, v in pairs(HasherClient.Modules.HashTable) do
+if string.find(i, FF_HeliCrateConstants) and string.find(i, LL_HeliCrateConstants) and FF_HeliCrateConstants:sub(1,1) == i:sub(1,1) and LL_HeliCrateConstants:sub(#LL_HeliCrateConstants,#LL_HeliCrateConstants) == i:sub(#i,#i) then
+    HasherClient.Hashes.HeliCrate = i
+end
+end
+
+--Interact
+
+InteractConstants = {}
+for i,v in pairs(getconstants(HasherClient.Modules.ExplodeWallFunc)) do  
+if type(v) == 'string' and v ~= 'sub' and v ~= 'reverse' and v ~= 'Name' and v ~= 'tick' and v ~= 'FireServer' and v ~= '' and v ~= 'ExplodeWall' then
+    table.insert(InteractConstants, v)
+end
+end
+local FF_InteractConstants = InteractConstants[1]
+local LL_InteractConstants = InteractConstants[table.maxn(InteractConstants)]
+for i, v in pairs(HasherClient.Modules.HashTable) do
+if string.find(i, FF_InteractConstants) and string.find(i, LL_InteractConstants) and FF_InteractConstants:sub(1,1) == i:sub(1,1) and LL_InteractConstants:sub(#LL_InteractConstants,#LL_InteractConstants) == i:sub(#i,#i) then
+    HasherClient.Hashes.Interact = i
+end
+end
+
+--Taze
+TazeFunc = require(game:GetService('ReplicatedStorage').Game.Item.Taser).Tase
+TazeConstants = {}
+for i,v in pairs(getconstants(TazeFunc)) do  
+if i > table.find(getconstants(TazeFunc), "GetPlayerFromCharacter") and i < table.find(getconstants(TazeFunc), "Name") and v~= "sub" and v ~= "reverse" then
+    table.insert(TazeConstants, v)
+end
+end
+local FF_TazeConstants = TazeConstants[1]
+local LL_TazeConstants = TazeConstants[table.maxn(TazeConstants)]
+for i, v in pairs(HasherClient.Modules.HashTable) do
+if string.find(i, FF_TazeConstants) and string.find(i, LL_TazeConstants) and FF_TazeConstants:sub(1,1) == i:sub(1,1) and LL_TazeConstants:sub(#LL_TazeConstants,#LL_TazeConstants) == i:sub(#i,#i) then
+    HasherClient.Hashes.Taze = i
+end
+end
+
+
+Client = {
+Hashes = {
+    Donut1 = HasherClient.Hashes.Donut1,    
+    Donut2 = HasherClient.Hashes.Donut2,    
+    KickHash = HasherClient.Hashes.KickHash,  
+    Team = HasherClient.Hashes.Team,      
+    GiftSafe = HasherClient.Hashes.GiftSafe,  
+    HeliCrate = HasherClient.Hashes.HeliCrate, 
+    Interact = HasherClient.Hashes.Interact,  
+    Taze = HasherClient.Hashes.Taze,      
+},
+Toggles = {
+    Walkspeed = false,
+    JumpPower = false,
+    InfJump = false,
+    NoClip = false,
+    NoRagdoll = false,
+    Godmode = false,
+    AutoFarm = false,
+    AutoArrest = false,
+    RainbowNitro = false,
+    RainbowCar = false,
+    InfNitro = false,
+    RainbowCarS = false,
+    LoopExplode = false,
+    LoopVolcano = false,
+    LoopSewer = false,
+    OpenAllDoors = false,
+    NoTirePop = false
+},
+Values = {
+    WalkSpeed = 16,
+    JumpPower = 50,
+    Method = 1,
+    carspeed = 1,
+    turnspeed = 1.5,
+    suspention = 3
+},
+Teleports = {
+    ['Jewelry Out'] = CFrame.new(156.103851, 18.540699, 1353.72388),
+    ['Jewelry In'] = CFrame.new(133.300705, 17.9375954, 1316.42407),
+    ['Bank Out'] = CFrame.new(11.6854906, 17.8929214, 788.188171),
+    ['Bank In'] = CFrame.new(24.6513691, 19.4347649, 853.291687),
+    ['Museum Out'] = CFrame.new(1103.53406, 138.152878, 1246.98511),
+    ['Donut Shop'] = CFrame.new(76.4559402, 21.0584793, -1591.01416, 0.790199757, 0.156331331, -0.592574954, 0.015425493, 0.96153754, 0.274239838, 0.612655461, -0.225844979, 0.757395089),
+    ['Gas Station'] = CFrame.new(-1584.1051, 18.4732189, 721.38739),
+    ['PowerPlant'] = CFrame.new(702.740967, 39.0193367, 2371.88672, -0.998025119, -0.00970620103, -0.0620610416, -0.00215026829, 0.992689848, -0.120674998, 0.0627786592, -0.120303221, -0.990750134),
+    ['Airport'] = CFrame.new(-1227.47449, 64.4552231, 2787.64233),
+    ['Gun Shop'] = CFrame.new(-27.8670673, 17.7929249, -1774.66882),
+    ['Volcano Base'] = CFrame.new(1726.72266, 50.4146309, -1745.76196),
+    ['City Base'] = CFrame.new(-244.824478, 17.8677788, 1573.81616),
+    ['Boat Port'] = CFrame.new(-407.957886, 22.5707016, 2049.26074, -0.976195455, 0.0327876508, -0.214399904, 0.00279002171, 0.990324318, 0.138744399, 0.216874525, 0.134843469, -0.966841578),
+    ['Boat Cave'] = CFrame.new(1875.21838, 32.8055534, 1909.28687, -0.701772571, 0.0434923843, -0.711072326, -0.0087880427, 0.997530222, 0.0696865618, 0.712346911, 0.0551530346, -0.699657202),
+    ['Prison Cells'] = CFrame.new(-1461.07605, -0.318537951, -1824.14917),
+    ['Prison Yard'] = CFrame.new(-1219.36316, 17.7750931, -1760.8584),
+    ['Prison Parking'] = CFrame.new(-1173.36951, 18.698061, -1533.47656),
+    ['1M Shop'] = CFrame.new(706.598267, 20.5805721, -1573.26294),
+    ['Military Base'] = CFrame.new(766.283386, 18.0144463, -324.15921),
+    ['Evil Lair'] = CFrame.new(1735.52405, 18.1646328, -1726.05249),
+    ['Secret Agent Base'] = CFrame.new(1506.60754, 69.8824005, 1634.42456),
+    ['Garage'] = CFrame.new(-384.259521, 19.6279697, 1221.55005),
+    ['Lookout'] = CFrame.new(1328.05725, 166.614426, 2609.93457),
+}
+}
+
+--Bypass Anticheat
+local startedTime = tick();
+for i,v in pairs(getgc(true)) do
+if not KickFunc and type(v) == 'function' and getfenv(v).script and getfenv(v).script == game:GetService('Players').LocalPlayer.PlayerScripts.LocalScript then
+    if debug.getconstants(v) and table.find(debug.getconstants(v),'FailedPcall') then
+        KickFunc = v
+    end
+end
+end
+
+x = debug.getupvalues(KickFunc)[1]
+OldFire = getupvalue(x,18)
+local FireServerHook = newcclosure(function(TEvent, Key, ...)
+if Key then
+    Args = {...}
+    if tostring(Key) == 'JumpPower' then
+        print('DEBUG : '..'ATTEMPTED KICK FOR JUMPPOWER')
+        return
+    end
+    if string.match(tostring(Key),'NoClip') then
+        print('DEBUG : '..'ATTEMPTED KICK FOR NOCLIP')
+        return
+    end
+    if tostring(Key) == 'Getupvalues' then
+        print('DEBUG : '..'ATTEMPTED KICK FOR GETUPVALUES DETECTED ENVIORMENT')
+        return
+    end
+end
+return OldFire(TEvent, Key, ...)
+end)
+setupvalue(x,18,FireServerHook)
+
+if not KickFunc then
+return nil 
+end
+Notif('Please give FopeHub some time to load!',3)
+
+
+wait(0.5)
+--Load GC Framework
+local startedTime = tick();
+for i,v in pairs(getgc(true)) do
+if not Network and type(v) == 'table' and rawget(v,'FireServer') then
+    Network = v
+end
+if not HashTable and type(v) == "table" then
+    for i2,v2 in pairs(v) do
+        if type(v2) == "string" and v2:sub(1,1) == "!" and v2:len() > 10 then
+            HashTable = v
+        end
+    end
+end
+if not ExitCar and type(v) == "function" and getfenv(v).script == game:GetService("Players").LocalPlayer.PlayerScripts.LocalScript then
+    local con = getconstants(v)
+    if table.find(con, "LastVehicleExit") and table.find(con, "tick") then
+        ExitCar = v
+    end
+end
+if not Falling and type(v) == "table" and rawget(v, 'Ragdoll') and rawget(v, 'Unragdoll') then
+    Falling = v
+end
+if not DonutFunction and type(v) == "function" and getfenv(v).script == game:GetService("ReplicatedStorage").Game.Inventory then
+    DonutFunction = v
+end
+if not PoliceFunction and  type(v) == 'function' and getfenv(v).script and getfenv(v).script.name == 'LocalScript' then
+    Cnts = debug.getconstants(v)
+    if type(Cnts) == 'table' and table.find(Cnts, "ShouldArrest") and #Cnts == 3 then
+        PoliceFunction = v
+    end
+end
+if not NitroTable and type(v) == "table" and rawget(v, "Nitro") and rawget(v,'NitroLastMax') then
+    Nitro = v
+end
+if not GarageFuncCar and type(v) == 'function' and getfenv(v).script == game:GetService('ReplicatedStorage').Game.Garage.GarageUI then
+    local Right = debug.getconstants(debug.getproto(require(game:GetService('ReplicatedStorage').Game.Garage.GarageUI).Init,1))
+    if unpack(debug.getconstants(v)) == unpack(Right) and not table.find(debug.getconstants(v),'Index') then
+        GarageFuncCar = v
+    end
+end
+if not PlayFunc and type(v) == "function" and getfenv(v).script == game:GetService("Players").LocalPlayer.PlayerScripts.LocalScript then
+    local con = getconstants(v)
+    if table.find(con, "Play") and table.find(con, "Source") and table.find(con, "FireServer") then
+        PlayFunc = v
+    end
+end
+if not DoorOpenFunc and type(v) == "function" and getfenv(v).script == game:GetService("Players").LocalPlayer.PlayerScripts.LocalScript then
+    local con = getconstants(v)
+    if table.find(con, "SequenceRequireState") then
+        DoorOpenFunc = v
+    end
+end
+if not BBClient and type(v) == 'table' and rawget(v,'doesPlayerOwn') then
+    BBClient = v
+end
+end
+wait(.5)
+if not HashTable[Client.Hashes.KickHash] then
+Notif('DEBUG : Unable to Find Kick Hash! Continue with caution!')
+end
+
+if PoliceFunction then
+ArrestFunc = getupvalue(getupvalue(PoliceFunction,1),7)
+end
+
+
+wait(0.2)
+
+local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/OlivierPL/FopeUiLib/main/FopeHubUI"))()
+main = lib:Window()
+
+local Teleports_Tab = main:Tab("Teleports")
+local Farming_Tab = main:Tab('Farming')
+local Player_Tab = main:Tab("LocalPlayer")
+local Vehicle_Tab = main:Tab('Vehicle')
+local Server_Tab = main:Tab("Server")
+local Tool_Tab = main:Tab("Tools")
+local Esp_Tab = main:Tab("Esp")
+
+
+Temp_Tried = 0
+wait(0.03)
+
+
+function MyCar()
+for i,v in next, game:GetService("Workspace").Vehicles:GetChildren() do
+    if v.Seat.PlayerName.Value == game:GetService('Players').LocalPlayer.Name then
+        return v
+    end
+end
+end
+function FindCars(Name)
+local Vehicles = {}
+for i,v in pairs(workspace.Vehicles:GetChildren()) do 
+    if v.Name == Name and v:FindFirstChild("Seat") and v.Seat:FindFirstChild("Player") and v.Seat.Player.Value == false then 
+        table.insert(Vehicles, v)
+     end 
+end
+return Vehicles
+end
+
+function Teleport(cframe, LeaveCar)
+if MyCar() ~= nil and LeaveCar then
+    ExitCar()
+    ExitCar()
+    wait(0.3)
+end
+if game:GetService('Players').LocalPlayer.Character and game:GetService('Players').LocalPlayer.Character.Humanoid.Sit == true then
+    MyCar():SetPrimaryPartCFrame(cframe)
+    return
+end
+require(game:GetService('ReplicatedStorage').Game.ItemSystem.ItemSystem).Unequip()
+local function FindCars(Name)
+    local Vehicles = {}
+    for i,v in pairs(workspace.Vehicles:GetChildren()) do 
+        if v.Name == Name and v:FindFirstChild("Seat") and v.Seat:FindFirstChild("Player") and v.Seat.Player.Value == false then 
+            table.insert(Vehicles, v)
+        end 
+    end
+    return Vehicles
+end
+local Vehicle, EnterFunctionT = nil, nil
+function SetVehicle()
+    if require(game:GetService("ReplicatedStorage").Game.Vehicle).GetLocalVehicleModel() == false then
+        Vehicle = FindCars("Camaro")[math.random(1, #FindCars("Camaro"))]
+        for i,v in pairs(require(game:GetService('ReplicatedStorage').Module.UI).CircleAction.Specs) do
+            if v.Tag and v.Tag.Name == "Seat" and v.Tag.Parent == Vehicle then
+                EnterFunctionT = v
+            end
+        end
+    else
+        Vehicle = require(game:GetService("ReplicatedStorage").Game.Vehicle).GetLocalVehicleModel()
+    end
+end
+SetVehicle()
+if Vehicle then 
+    workspace.CurrentCamera.CameraType = Enum.CameraType.Scriptable
+    local cameraCF = workspace.CurrentCamera.CFrame
+    local old = Vehicle.PrimaryPart.CFrame
+    wait()
+    for i,v in pairs(Vehicle:GetDescendants()) do 
+        if v:IsA("BasePart") then 
+            v.Anchored = false    
+        end    
+    end
+    wait(0.05)
+    if EnterFunctionT and EnterFunctionT.Tag then
+        for i = 1,20 do 
+            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = Vehicle.BoundingBox.CFrame + Vector3.new(0,2,0)
+            game:GetService("RunService").RenderStepped:wait()
+        end
+        wait(0.02)
+        for i = 1,5 do
+            EnterFunctionT:Callback(EnterFunctionT.Tag)
+            game:GetService("RunService").RenderStepped:wait()
+        end
+    end
+    workspace.CurrentCamera.CFrame = cameraCF
+    wait()
+    for i,v in pairs(Vehicle:GetDescendants()) do 
+        if v:IsA("BasePart") then 
+            v.Anchored = true
+        end    
+    end
+    workspace.CurrentCamera.CFrame = cameraCF
+    wait(0.01)
+    Vehicle:SetPrimaryPartCFrame(cframe + Vector3.new(-14,14,0))
+    for i,v in pairs(Vehicle:GetDescendants()) do 
+        if v:IsA("BasePart") then 
+            v.Anchored = false    
+        end  
+    end
+    if not LeaveCar then
+        wait(0.2)
+        Vehicle:SetPrimaryPartCFrame(cframe)
+    else
+        wait(0.5)
+        for i = 1,3 do
+            ExitCar()
+        end
+        wait(0.3)
+        for i = 1,8 do
+            wait()
+            for i,v in pairs(Vehicle:GetDescendants()) do 
+                if v:IsA("BasePart") then 
+                    v.Anchored = true
+                end    
+            end
+            game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0,-15,0)
+            game:GetService('Players').LocalPlayer.Character:SetPrimaryPartCFrame(cframe)
+            game:GetService('Players').LocalPlayer.Character.Humanoid:SetStateEnabled("FallingDown", false)
+        end
+        wait(0.46)
+        if LeaveCar and (cframe.p - game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position).magnitude > 52  then 
+            wait(0.5)
+            Teleport(cframe, LeaveCar)
+        end
+    end
+end
+end
+
+function RobCarTP(cframe, LeaveCar)
+if Client.Toggles.AutoFarm == false then
+    print('offline')
+    while wait() do end
+end
+if MyCar() ~= nil and LeaveCar then
+    ExitCar()
+    ExitCar()
+    wait(0.6)
+end
+if game:GetService('Players').LocalPlayer.Character and game:GetService('Players').LocalPlayer.Character.Humanoid.Sit == true then
+    MyCar():SetPrimaryPartCFrame(cframe)
+    return
+end
+require(game:GetService('ReplicatedStorage').Game.ItemSystem.ItemSystem).Unequip()
+local function FindCars(Name)
+    local Vehicles = {}
+    for i,v in pairs(workspace.Vehicles:GetChildren()) do 
+        if v.Name == Name and v:FindFirstChild("Seat") and v.Seat:FindFirstChild("Player") and v.Seat.Player.Value == false then 
+            table.insert(Vehicles, v)
+        end 
+    end
+    return Vehicles
+end
+local Vehicle, EnterFunctionT = nil, nil
+function SetVehicle()
+    if require(game:GetService("ReplicatedStorage").Game.Vehicle).GetLocalVehicleModel() == false then
+        Vehicle = FindCars("Camaro")[math.random(1, #FindCars("Camaro"))]
+        for i,v in pairs(require(game:GetService('ReplicatedStorage').Module.UI).CircleAction.Specs) do
+            if v.Tag and v.Tag.Name == "Seat" and v.Tag.Parent == Vehicle then
+                EnterFunctionT = v
+            end
+        end
+    else
+        Vehicle = require(game:GetService("ReplicatedStorage").Game.Vehicle).GetLocalVehicleModel()
+    end
+end
+SetVehicle()
+if Vehicle then 
+    workspace.CurrentCamera.CameraType = Enum.CameraType.Scriptable
+    local cameraCF = workspace.CurrentCamera.CFrame
+    local old = Vehicle.PrimaryPart.CFrame
+    wait()
+    for i,v in pairs(Vehicle:GetDescendants()) do 
+        if v:IsA("BasePart") then 
+            v.Anchored = false    
+        end    
+    end
+    wait(0.1)
+    if EnterFunctionT and EnterFunctionT.Tag then
+        for i = 1,20 do 
+            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = Vehicle.BoundingBox.CFrame + Vector3.new(0,2,0)
+            game:GetService("RunService").RenderStepped:wait()
+        end
+        wait(0.3)
+        for i = 1,5 do
+            EnterFunctionT:Callback(EnterFunctionT.Tag)
+            game:GetService("RunService").RenderStepped:wait()
+        end
+    end
+    workspace.CurrentCamera.CFrame = cameraCF
+    wait(.1)
+    for i,v in pairs(Vehicle:GetDescendants()) do 
+        if v:IsA("BasePart") then 
+            v.Anchored = true
+        end    
+    end
+    workspace.CurrentCamera.CFrame = cameraCF
+    wait(0.1)
+    for i = 1,10 do
+        wait()
+        Vehicle:SetPrimaryPartCFrame(cframe + Vector3.new(-14,14,0))
+    end
+    for i,v in pairs(Vehicle:GetDescendants()) do 
+        if v:IsA("BasePart") then 
+            v.Anchored = false    
+        end  
+    end
+    if not LeaveCar then
+        wait(0.2)
+        Vehicle:SetPrimaryPartCFrame(cframe)
+    else
+        wait(0.89)
+        for i = 1,3 do
+            ExitCar()
+        end
+        wait(0.3)
+        for i = 1,8 do
+            wait()
+            for i,v in pairs(Vehicle:GetDescendants()) do 
+                if v:IsA("BasePart") then 
+                    v.Anchored = true
+                end    
+            end
+            game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0,-15,0)
+            game:GetService('Players').LocalPlayer.Character:SetPrimaryPartCFrame(cframe)
+            game:GetService('Players').LocalPlayer.Character.Humanoid:SetStateEnabled("FallingDown", false)
+        end
+        wait(0.7)
+        if LeaveCar and (cframe.p - game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.Position).magnitude > 52  then 
+            wait(0.5)
+            RobCarTP(cframe, LeaveCar)
+        end
+    end
+end
+end
+function SmallTp(cframeinput)
+game:GetService('Players').LocalPlayer.Character.Humanoid:SetStateEnabled("FallingDown", false)
+local Pos_A = -10 + math.random() * -10
+local Pos_B = (cframeinput - cframeinput.p) + Vector3.new(game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.Position.X, Pos_A, game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.Position.Z)
+local Pos_C = Vector3.new(cframeinput.X, Pos_A, cframeinput.Z) - Pos_B.p
+local OldGrav = workspace.Gravity
+workspace.Gravity = 0
+for indx = 0, Pos_C.Magnitude, 5 do
+    game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.CFrame = Pos_B + Pos_C.Unit * indx
+    game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0)
+    wait()
+end
+game:GetService('Players').LocalPlayer.Character.HumanoidRootPart.CFrame = cframeinput
+workspace.Gravity = OldGrav
+wait(.1)
+end
+
+CarTPFARM = function(cframe, LeaveCar)
+pcall(function()
+    if game:GetService('Players').LocalPlayer.Character and game:GetService('Players').LocalPlayer.Character.Humanoid.Sit == true and LeaveCar == true then
+        game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.E, false, game)
+        wait(0.4)
+    end
+    x = require(game:GetService('ReplicatedStorage').Game.ItemSystem.ItemSystem)
+    x.Unequip()
+        local function FindCars(Name)
+            local Vehicles = {}
+            for i,v in pairs(workspace.Vehicles:GetChildren()) do 
+                if v.Name == Name and v:FindFirstChild("Seat") and v.Seat:FindFirstChild("Player") and v.Seat.Player.Value == false then 
+                    table.insert(Vehicles, v)
+                end 
+            end
+            return Vehicles
+        end
+        local Vehicle, EnterFunctionT = nil, nil
+        function SetVehicle()
+            if require(game:GetService("ReplicatedStorage").Game.Vehicle).GetLocalVehicleModel() == false then
+                Vehicle = FindCars("Camaro")[math.random(1, #FindCars("Camaro"))]
+                for i,v in pairs(require(game:GetService('ReplicatedStorage').Module.UI).CircleAction.Specs) do
+                    if v.Tag and v.Tag.Name == "Seat" and v.Tag.Parent == Vehicle then
+                        EnterFunctionT = v
+                    end
+                end
+            else
+                Vehicle = require(game:GetService("ReplicatedStorage").Game.Vehicle).GetLocalVehicleModel()
+            end
+        end
+        SetVehicle()
+        if Vehicle then 
+            if Vehicle:FindFirstChild("Seat") and Vehicle.Seat.Player.Value == true then
+                SetVehicle()
+            end
+        elseif Vehicle == nil then
+            SpawnVehicle("Camaro")
+            wait(0.1)
+            SetVehicle()
+        end
+        if Vehicle then 
+            workspace.CurrentCamera.CameraType = Enum.CameraType.Scriptable
+            local cameraCF = workspace.CurrentCamera.CFrame
+            local old = Vehicle.PrimaryPart.CFrame
+            wait()
+            for i,v in pairs(Vehicle:GetDescendants()) do 
+                if v:IsA("BasePart") then 
+                    v.Anchored = false    
+                end    
+            end
+            wait(0.05)
+            if EnterFunctionT and EnterFunctionT.Tag then
+                for i = 1,20 do 
+                    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = Vehicle.BoundingBox.CFrame + Vector3.new(0,2,0)
+                    game:GetService("RunService").RenderStepped:wait()
+                end
+                wait(0.02)
+                for i = 1,5 do
+                    EnterFunctionT:Callback(EnterFunctionT.Tag)
+                    game:GetService("RunService").RenderStepped:wait()
+                end
+            end
+            workspace.CurrentCamera.CFrame = cameraCF
+            wait()
+            for i,v in pairs(Vehicle:GetDescendants()) do 
+                if v:IsA("BasePart") then 
+                    v.Anchored = true
+                end    
+            end
+            workspace.CurrentCamera.CFrame = cameraCF
+            wait(0.01)
+            Vehicle:SetPrimaryPartCFrame(cframe)
+            if LeaveCar then
+                wait(0.05)
+                workspace.CurrentCamera.CFrame = cameraCF
+                game:GetService("VirtualInputManager"):SendKeyEvent(true, Enum.KeyCode.E, false, game)
+                wait(0.2)
+                Vehicle:SetPrimaryPartCFrame(old)
+                workspace.CurrentCamera.CFrame = cameraCF
+            end
+        for i,v in pairs(Vehicle:GetDescendants()) do 
+            if v:IsA("BasePart") then 
+                v.Anchored = false    
+            end    
+        end
+        wait(0.25)
+    end
+end)
+end
+
+function Handcuffs()
+Cuffs = nil
+for i,v in pairs(game:GetService("Players").LocalPlayer.PlayerGui.HotbarGui.Container:GetChildren()) do
+    if v:FindFirstChild('Icon') and v.Icon.Image == 'rbxassetid://700374045' then
+        Cuffs = v
+        x = require(game:GetService('ReplicatedStorage').Game.ItemSystem.ItemSystem)
+        x.Equip(game:GetService('Players').LocalPlayer,{i = Cuffs.Name,Frame = Cuffs.Icon,Name = "Handcuffs"})
+    end
+end
+if not Cuffs then
+    wait(0.3)
+    ExitCar()
+    Network:FireServer(Client.Hashes.Team,'Police')
+    wait(3)
+end
+end
+function PlayersCar(Name)
+for i,v in next, game:GetService("Workspace").Vehicles:GetChildren() do
+    if v.Seat.PlayerName.Value == Name or v:FindFirstChild('Passenger') and v.Passenger.PlayerName.Value == Name then
+        return v
+    end
+end
+end
+
+function CarTP(cframe, LeaveCar)
+if game:GetService('Players').LocalPlayer.Character and game:GetService('Players').LocalPlayer.Character.Humanoid.Sit == true then
+    MyCar():SetPrimaryPartCFrame(cframe)
+    return
+end
+x = require(game:GetService('ReplicatedStorage').Game.ItemSystem.ItemSystem)
+x.Unequip()
+local function FindCars(Name)
+    local Vehicles = {}
+    for i,v in pairs(workspace.Vehicles:GetChildren()) do 
+        if v.Name == Name and v:FindFirstChild("Seat") and v.Seat:FindFirstChild("Player") and v.Seat.Player.Value == false then 
+            table.insert(Vehicles, v)
+        end 
+    end
+    return Vehicles
+end
+local Vehicle, EnterFunctionT = nil, nil
+function SetVehicle()
+    if require(game:GetService("ReplicatedStorage").Game.Vehicle).GetLocalVehicleModel() == false then
+        Vehicle = FindCars("Camaro")[math.random(1, #FindCars("Camaro"))]
+        for i,v in pairs(require(game:GetService('ReplicatedStorage').Module.UI).CircleAction.Specs) do
+            if v.Tag and v.Tag.Name == "Seat" and v.Tag.Parent == Vehicle then
+                EnterFunctionT = v
+            end
+        end
+    else
+        Vehicle = require(game:GetService("ReplicatedStorage").Game.Vehicle).GetLocalVehicleModel()
+    end
+end
+SetVehicle()
+if Vehicle then 
+    if Vehicle:FindFirstChild("Seat") and Vehicle.Seat.Player.Value == true then
+        SetVehicle()
+    end
+elseif Vehicle == nil then
+    SpawnVehicle("Camaro")
+    wait(0.1)
+    SetVehicle()
+end
+if Vehicle then 
+    workspace.CurrentCamera.CameraType = Enum.CameraType.Scriptable
+    local cameraCF = workspace.CurrentCamera.CFrame
+    local old = Vehicle.PrimaryPart.CFrame
+    wait()
+    for i,v in pairs(Vehicle:GetDescendants()) do 
+        if v:IsA("BasePart") then 
+            v.Anchored = false    
+        end    
+    end
+    wait(0.05)
+    if EnterFunctionT and EnterFunctionT.Tag then
+        for i = 1,20 do 
+            game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = Vehicle.BoundingBox.CFrame + Vector3.new(0,2,0)
+            game:GetService("RunService").RenderStepped:wait()
+        end
+        wait(0.02)
+        for i = 1,5 do
+            EnterFunctionT:Callback(EnterFunctionT.Tag)
+            game:GetService("RunService").RenderStepped:wait()
+        end
+    end
+    workspace.CurrentCamera.CFrame = cameraCF
+    wait()
+    for i,v in pairs(Vehicle:GetDescendants()) do 
+        if v:IsA("BasePart") then 
+            v.Anchored = true
+        end    
+    end
+    workspace.CurrentCamera.CFrame = cameraCF
+    wait(0.01)
+    Vehicle:SetPrimaryPartCFrame(cframe)
+    workspace.CurrentCamera.CFrame = cameraCF
+    for i,v in pairs(Vehicle:GetDescendants()) do 
+        if v:IsA("BasePart") then 
+            v.Anchored = false    
+        end    
+    end
+    wait(0.2)
+    for i = 1,3 do
+        ExitCar()
+    end
+end
+end
+
+
+
+--Teleports
+
+Teleports_Tab:Dropdown('Teleport Method',{'Method 1','Method 2'},function(Sele)
+if Sele == 'Method 1' then
+    Client.Values.Method = 1
+    Notif('Using Method 1',2)
+else
+    Client.Values.Method = 2
+    Notif('Using Method 2',2)
+end
+end)
+
+for i,v in pairs(Client.Teleports) do
+Teleports_Tab:Button(tostring(i),function()
+    if Client.Toggles.AutoArrest == true or Client.Toggles.AutoFarm == true then
+        Notif('Please Disabled Farming First',2)
+        return
+    end
+    if Client.Values.Method == 1 then
+        CarTP(v)
+    else
+        Temp_Tried = 1
+        Teleport(v, true)
+    end
+end)
+end
+
+--LocalPlayer
+
+Player_Tab:Toggle('WalkSpeed',function(state)
+Client.Toggles.WalkSpeed = state
+end)
+Player_Tab:Slider('WalkSpeed Config',16,100,function(num)
+Client.Values.WalkSpeed = num
+end)
+Player_Tab:Toggle('JumpPower',function(state)
+Client.Toggles.JumpPower = state
+end)
+Player_Tab:Slider('JumpPower Config',50,175,function(num)
+Client.Values.JumpPower = num
+end)
+Player_Tab:Toggle("Inf Jump", function(state)
+Client.Toggles.InfJump = state
+end)
+Player_Tab:Toggle('No Clip',function(state)
+Client.Toggles.NoClip = state
+end)
+wait(0.03)
+game:GetService("UserInputService").JumpRequest:connect(function()
+if Client.Toggles.InfJump then
+    game:GetService"Players".LocalPlayer.Character:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
+end
+end)
+game:GetService("RunService").RenderStepped:Connect(function()
+if Client.Toggles.WalkSpeed then
+    game:GetService('Players').LocalPlayer.Character.Humanoid.WalkSpeed = Client.Values.WalkSpeed
+end
+if Client.Toggles.JumpPower then
+    game:GetService('Players').LocalPlayer.Character.Humanoid.JumpPower = Client.Values.JumpPower
+else
+    game:GetService('Players').LocalPlayer.Character.Humanoid.JumpPower = 50
+end
+end)
+
+game:GetService("RunService").Stepped:Connect(function()
+if Client.Toggles.NoClip then
+    for i, v in ipairs(game:GetService("Players").LocalPlayer.Character:GetChildren()) do
+        if v:IsA("BasePart")then
+            v.CanCollide = false
+        end
+    end
+end
+end)
+
+local oldRagdoll = Falling.Ragdoll
+Falling.Ragdoll = function(...)
+if Client.Toggles.NoRagdoll then
+    return wait(9e9)
+else
+    return oldRagdoll(...)
+end
+end
+Player_Tab:Toggle('No Ragdoll',function(state)
+Client.Toggles.NoRagdoll = state
+end)
+require(game:GetService("ReplicatedStorage").Game.ItemSystem.ItemSystem).Errors = function() return end
+Player_Tab:Toggle('Godmode',function(state)
+Client.Toggles.Godmode = state
+if state == true then
+    debug.setconstant(DonutFunction,12,"Errors")
+else
+    debug.setconstant(DonutFunction,12,"Unequip")
+end
+end)
+game:GetService("RunService").Stepped:Connect(function()
+if Client.Toggles.Godmode  then
+    Network:FireServer(Client.Hashes.Donut1,'Donut')
+    Network:FireServer(Client.Hashes.Donut2)
+end
+end)
+
+Player_Tab:Button('No Wait E',function()
+while wait(.1) do
+    m = require(game:GetService("ReplicatedStorage").Module:WaitForChild("UI"))
+    for i,v in next, m.CircleAction.Specs do
+        v.Duration = 0
+        v.Timed = true
+    end
+end
+end)
+Player_Tab:Button('Remove Suit',function()
+fireclickdetector(game:GetService('Workspace').ClothingRacks.ClothingRack.Hitbox.ClickDetector)
+end)
+Player_Tab:Button('No Team Switch Delay',function()
+require(game:GetService("ReplicatedStorage").Resource.Settings).Time.BetweenTeamChange = 0
+end)
+
+Player_Tab:Toggle('FE Orange Justice',function(state)
+if state == true then
+    local Players = game:GetService("Players")
+    local player = Players.LocalPlayer
+    local character = player.Character 
+    local humanoid = character:FindFirstChild("Humanoid")
+    local animation = Instance.new("Animation")
+    animation.AnimationId = "http://www.roblox.com/asset/?id=3066265539"
+    local animationTrack = humanoid:LoadAnimation(animation)
+    animationTrack:Play()
+else
+    local AnimationTracks = game:GetService('Players').LocalPlayer.Character.Humanoid:GetPlayingAnimationTracks()
+    for i, track in pairs (AnimationTracks) do
+        if string.match(track.Animation.AnimationId,"3066265539") then
+            track:Stop()
+        end
+    end
+end
+end)
+
+function firetouchinterest(Part,Touch,Inx)
+temp_Old = Touch.CFrame
+Touch.CFrame = Part.CFrame
+wait()
+Touch.CFrame = temp_Old
+end
+
+Player_Tab:Dropdown('Change Team',{'Police','Criminal','Prisoner'},function(Sele)
+if game:GetService('Players').LocalPlayer.Character and game:GetService('Players').LocalPlayer.Character.Humanoid.Sit == true then
+    ExitCar()
+    wait()
+end
+if Sele == 'Police' then
+    Network:FireServer(Client.Hashes.Team,'Police')
+end
+if Sele == 'Criminal' then
+    Network:FireServer(Client.Hashes.Team,'Prisoner')
+    wait(0.8)
+    firetouchinterest(game:GetService('Players').LocalPlayer.Character.HumanoidRootPart, game:GetService("Workspace").Apartments.Skyscraper3.ExitDoor.Touch, 0)
+end
+if Sele == 'Prisoner' then
+    Network:FireServer(Client.Hashes.Team,'Prisoner')
+end
+end)
+
+Player_Tab:Button('Fix Camera',function()
+if MyCar() then
+    workspace.CurrentCamera.CameraSubject = MyCar().PrimaryPart
+    workspace.CurrentCamera.CameraType = "Custom"
+else
+    workspace.CurrentCamera.CameraSubject = game:GetService('Players').LocalPlayer.Character.Humanoid
+    workspace.CurrentCamera.CameraType = "Custom"
+end
+end)
+
+Player_Tab:Button('Fix Player',function()
+Network:FireServer(Client.Hashes.Team,'Prisoner')
+end)
+
+--Farming Tab
+
+MainStatus = Farming_Tab:Label('Farming Disabled For Rewrite')
+
+function MyCar()
+for i,v in next, game:GetService("Workspace").Vehicles:GetChildren() do
+    if not v:FindFirstChild('Seat') then return nil end
+    if v.Seat and v.Seat.PlayerName.Value == game:GetService('Players').LocalPlayer.Name then
+        return v
+    end
+end
+end
+
+
+Vehicle_Tab:Toggle('Rainbow Nitro Client',function(state)
+Client.Toggles.RainbowNitro = state
+end)
+Vehicle_Tab:Toggle('Rainbow Car Client',function(state)
+Client.Toggles.RainbowCar = state
+end)
+Vehicle_Tab:Toggle('Inf Nitro Client',function(state)
+Client.Toggles.InfNitro = state
+end)
+
+
+game:GetService("RunService").Stepped:Connect(function()
+if Client.Toggles.InfNitro == true then
+    Nitro.Nitro = 200
+    Nitro.NitroLastMax = 200
+end
+for i,v in pairs(workspace.Vehicles:GetChildren()) do
+    if v:FindFirstChild('Seat') then
+        if v.Seat:WaitForChild("PlayerName").Value == game:GetService('Players').LocalPlayer.Name then
+            for a,b in pairs(v.Model:GetChildren()) do
+                if b.Name == "Nitrous" and Client.Toggles.RainbowNitro == true then
+                    currrain = Color3.fromHSV(tick()%5/5,1,1)
+                    b.Fire.Color = ColorSequence.new(currrain)
+                    b.Smoke.Color = ColorSequence.new(currrain)
+                end
+                if b:IsA('BasePart') and Client.Toggles.RainbowCar == true then
+                    b.Color = Color3.fromHSV(tick()%5/5,1,1)
+                end
+            end
+        end
+    end
+end
+end)
+
+local FlySpeed = 50
+function GetCarMain()
+local x = game:GetService("Players").LocalPlayer.Name
+for j, y in pairs(workspace.Vehicles:GetChildren()) do
+    if y:FindFirstChild("Seat") and y:FindFirstChild("Engine") then
+        if y.Seat.PlayerName.Value == x then
+            return y.Engine, false
+        end
+    elseif y:FindFirstChild("Seat") and y:FindFirstChild("Model") then
+        if y.Seat.PlayerName.Value == x then
+            if y.Model:FindFirstChild("Body") then
+                return y.Model.Body, true
+            end
+        end
+    end
+end
+end
+function FlyPart(z, A)
+local B = Instance.new("Folder")
+B.Name = "Storage"
+for j, C in pairs(z:GetChildren()) do
+    if C:IsA("BodyGyro") then
+        C.Parent = B
+    end
+end
+local D = Instance.new("BodyPosition", z)
+D.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
+D.Name = "Position"
+local E = Instance.new("BodyGyro", z)
+E.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
+E.Name = "Rotate"
+workspace.CurrentCamera.CameraSubject = z
+local f = game:GetService("Players").LocalPlayer:GetMouse()
+local F = 0
+local G =
+    f.KeyDown:Connect(
+    function(H)
+        if H == "w" then
+            if A then
+                F = FlySpeed
+            else
+                F = tonumber("-" .. tostring(FlySpeed))
+            end
+        elseif H == "s" then
+            if A then
+                F = tonumber("-" .. tostring(FlySpeed))
+            else
+                F = FlySpeed
+            end
+        end
+    end
+)
+f.KeyUp:Connect(
+    function(H)
+        if H == "w" then
+            F = 0
+        elseif H == "s" then
+            F = 0
+        end
+    end
+)
+local I = {}
+I.IsRunning = true
+I.Part = z
+I.Storage = B
+I.MT = G
+coroutine.resume(
+    coroutine.create(
+        function()
+            repeat
+                local J = workspace.CurrentCamera.CFrame
+                local K = z.Position
+                local L = (K - J.p).Magnitude
+                D.Position = (J * CFrame.new(0, 0, tonumber("-" .. tostring(L)) + F)).p + Vector3.new(0, 0.2225, 0)
+                E.CFrame = J
+                wait()
+            until I.IsRunning == false or workspace.CurrentCamera.CameraSubject ~= z
+            D:Remove()
+            E:Remove()
+            for j, M in pairs(I.Storage:GetChildren()) do
+                M.Parent = I.Part
+            end
+            I.MT:Disconnect()
+            I.Storage:Remove()
+        end
+    )
+)
+return I
+end
+Vehicle_Tab:Button(
+"Car Fly",
+function()
+    if Client.Toggles.Autofarm == true or Client.Toggles.AutoArrest then
+        return
+    end
+    if GetCarMain() ~= nil then
+        local O, A = GetCarMain()
+        local P = FlyPart(O, A)
+        if A then
+            repeat
+                wait()
+            until O.Parent.Parent.Seat.PlayerName.Value ~= game:GetService("Players").LocalPlayer.Name
+        else
+            repeat
+                wait()
+            until O.Parent.Seat.PlayerName.Value ~= game:GetService("Players").LocalPlayer.Name
+        end
+        wait(0.1)
+        workspace.CurrentCamera.CameraSubject = d
+    end
+end
+)
+Vehicle_Tab:Slider(
+"Car Fly Speed",10,300,
+function(v)
+    FlySpeed = v
+end
+)
+Vehicle_Tab:Toggle('Auto Pilot',function(state)
+debug.setupvalue(require(game:GetService('ReplicatedStorage').Module.AlexChassis).OnAction, 8, state)
+end)
+
+Vehicle_Tab:Button('Boats On Lands',function()
+local old = require(game:GetService("ReplicatedStorage").Game.Boat.Boat).UpdatePhysics
+require(game:GetService("ReplicatedStorage").Game.Boat.Boat).UpdatePhysics = function(abc)
+    abc.Config.SpeedForward = 5
+    return old(abc)
+end
+end)
+
+Vehicle_Tab:Label('Car Mods')
+Vehicle_Tab:Slider("CarSpeed",1,100,function(v)
+Client.Values.carspeed = v
+end)
+Vehicle_Tab:Slider("TurnSpeed",1,100, function(v)
+Client.Values.turnspeed = v
+end)
+Vehicle_Tab:Slider("Suspention",1,100, function(v)
+Client.Values.suspention = v
+end)
+
+game:GetService("RunService").RenderStepped:Connect(function()
+local x = pcall(function()
+local vehicle = require(game:GetService("ReplicatedStorage").Game.Vehicle)
+debug.getupvalues(vehicle["GetLocalVehiclePacket"])[1]["GarageEngineSpeed"] = Client.Values.carspeed
+debug.getupvalues(vehicle["GetLocalVehiclePacket"])[1]["TurnSpeed"] = Client.Values.turnspeed
+debug.getupvalues(vehicle["GetLocalVehiclePacket"])[1]["Height"] = Client.Values.suspention
+if Client.Toggles.NoTirePop == true then
+    debug.getupvalues(vehicle["GetLocalVehiclePacket"])[1]["TirePopDuration"] = 0
+else
+    debug.getupvalues(vehicle["GetLocalVehiclePacket"])[1]["TirePopDuration"] = 7.5
+end
+end) if not x then end end)
+
+
+
+Server_Tab:Button('Destroy Everyones Ears',function()
+for i,v in pairs(require(game:GetService('ReplicatedStorage').Resource.Settings).Sounds) do
+    PlayFunc(i ,{Source = workspace, 
+    Volume = math.huge, 
+    Multi = true,
+    MaxTime = 10
+    }, false)
+end
+end)
+
+Server_Tab:Button('Erupt Volcano',function()
+LocalPlayer = game:GetService('Players').LocalPlayer
+workspace.LavaFun.Lavatouch.Transparency = 1
+firetouchinterest(LocalPlayer.Character:WaitForChild('HumanoidRootPart'), workspace.LavaFun.Lavatouch, 0)
+end)
+Server_Tab:Toggle('Loop Erupt Volcano',function(state)
+workspace.LavaFun.Lavatouch.Transparency = 1
+Client.Toggles.LoopVolcano = state
+end)    
+Server_Tab:Button('Open All Sewers',function()
+for i,v in pairs(game:GetService("Workspace").EscapeRoutes.SewerHatches:GetChildren()) do
+    Network:FireServer(Client.Hashes.Interact,'SewerHatch',v.SewerHatch)
+end
+end)
+Server_Tab:Toggle('Loop Open Sewers',function(state)
+Client.Toggles.LoopSewer = state
+end)    
+
+Server_Tab:Button('Explode Wall',function()
+Network:FireServer(Client.Hashes.Interact,'ExplodeWall')
+end)
+Server_Tab:Toggle('Loop Explode Wall',function(state)
+Client.Toggles.LoopExplode = state
+end)
+
+spawn(function()
+while true do
+    wait(0.7)
+    if Client.Toggles.LoopExplode == true then
+        Network:FireServer(Client.Hashes.Interact,'ExplodeWall')
+    end
+    if Client.Toggles.LoopSewer == true then
+        for i,v in pairs(game:GetService("Workspace").EscapeRoutes.SewerHatches:GetChildren()) do
+            Network:FireServer(Client.Hashes.Interact,'SewerHatch',v.SewerHatch)
+        end
+    end
+    if Client.Toggles.LoopVolcano == true then
+        LocalPlayer = game:GetService('Players').LocalPlayer
+        firetouchinterest(LocalPlayer.Character:WaitForChild('HumanoidRootPart'), workspace.LavaFun.Lavatouch, 0)
+    end
+end
+end)
+
+local doors = {}
+wait()
+for i,v in pairs(getgc(true)) do 
+if type(v) == "function" and getfenv(v).script == game:GetService("Players").LocalPlayer.PlayerScripts.LocalScript then
+    for i2,v2 in pairs(debug.getupvalues(v)) do 
+        if type(v2) == "table" and v2["Type"] and v2["Model"] and v2["OpenFun"] and v2["CloseFun"] and v2["Tag"] and v2["State"] and v2["Settings"] then
+            table.insert(doors,v2)
+        end
+    end
+end
+end
+Server_Tab:Button('Open All Doors',function()
+for i,v in pairs(doors) do
+    DoorOpenFunc(v)
+end
+end)
+Server_Tab:Toggle('Open All Doors',function(state)
+Client.Hashes.OpenAllDoors = state
+end)
+spawn(function()
+while true do
+    wait(1)
+    if Client.Hashes.OpenAllDoors then
+        for i,v in pairs(doors) do
+            DoorOpenFunc(v)
+        end
+    end
+end
+end)
+
+
+Tool_Tab:Button('Grab All Guns',function()
+Guns = require(game:GetService("ReplicatedStorage").Game.GunShop.Data.Held)
+for i,v in pairs(Guns) do
+    if type(v.Name) == 'string' and BBClient and BBClient.doesPlayerOwn(v.Name) then
+        Network:FireServer(Client.Hashes.GrabGun,v.Name)
+    end
+end    
+end)
+
+Tool_Tab:Button('Gun Mods',function()
+for i,v in pairs(game:GetService('ReplicatedStorage').Game.ItemConfig:GetChildren()) do
+    local cst = require(v)
+    cst.CamShakeMagnitude = 0
+    cst.MagSize = math.huge
+    cst.ReloadTime = 0
+    cst.FireAuto = true
+    cst.FireFreq = 30
+end
+local old = require(game:GetService('ReplicatedStorage').Game.Item.Taser).Tase
+require(game:GetService('ReplicatedStorage').Game.Item.Taser).Tase = function(self, ...)
+    self.Config.ReloadTime = 0
+    self.ReloadTimeHit = 0
+    return old(self, ...)
+end
+end)
+
+
+Tool_Tab:Button('Get Jetpack',function()
+game:GetService("Workspace").TouchTrigger.JetPackGiver.CFrame = game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame
+end)
+Tool_Tab:Button('Inf Jetpack Fuel',function()
+local RocketConfig = {}
+for i,v in next, debug.getupvalues(require(game:GetService('ReplicatedStorage').Game.JetPack.JetPack).Init) do
+    if typeof(v) == "table" then
+        if v.Equip then
+            RocketConfig = v
+            break
+        end
+    end
+end
+RocketConfig.LocalMaxFuel = math.huge
+RocketConfig.LocalFuel = math.huge
+RocketConfig.LocalFuelType = "Rocket"
+end)
+Tool_Tab:Button('Grab Glider',function()
+fireclickdetector(game:GetService("Workspace").Givers.Glider.ClickDetector)
+end)
+Tool_Tab:Button('Donut',function()
+Network:FireServer(Client.Hashes.Donut1,'Donut')
+end)
+
+
+--ESP
+
+Config = {
+Visuals = {
+    BoxEsp = false,
+    TracerEsp = false,
+    Names = false,
+    TeamCheck = true,
+    Criminal = Color3.fromRGB(255, 0, 0),
+    Police = Color3.fromRGB(0, 0, 255),
+    Prisoner = Color3.fromRGB(255, 165, 0),
+    ShowTeam = true,
+    ShowCops = false,
+    ShowCrims = false,
+    ShowPris = false
+}
+}
+local Services =
+setmetatable(
+{
+    LocalPlayer = game:GetService("Players").LocalPlayer,
+    Camera = workspace.CurrentCamera
+},
+{
+    __index = function(self, idx)
+        return rawget(self, idx) or game:GetService(idx)
+    end
+}
+)
+
+local Funcs = {}
+
+function Funcs:Round(number)
+return math.floor(tonumber(number) + 0.5)
+end
+
+function Funcs:DrawSquare()
+local Box = Drawing.new("Square")
+Box.Color = Color3.fromRGB(190, 190, 0)
+Box.Thickness = 0.5
+Box.Filled = false
+Box.Transparency = 1
+return Box
+end
+
+function Funcs:DrawQuad() -- Unused
+local quad = Drawing.new("Quad")
+quad.Color = Color3.fromRGB(190, 190, 0)
+quad.Thickness = 0.5
+quad.Filled = false
+quad.Transparency = 1
+return quad
+end
+
+function Funcs:DrawLine()
+local line = Drawing.new("Line")
+line.Color = Color3.new(190, 190, 0)
+line.Thickness = 0.5
+return line
+end
+
+function Funcs:DrawText()
+local text = Drawing.new("Text")
+text.Color = Color3.fromRGB(190, 190, 0)
+text.Size = 20
+text.Outline = true
+text.Center = true
+return text
+end
+
+Esp_Tab:Toggle(
+"Boxes",
+function(state)
+    Config.Visuals.BoxEsp = state
+end
+)
+
+Esp_Tab:Toggle(
+"Tracers",
+function(state)
+    Config.Visuals.TracerEsp = state
+end
+)
+
+Esp_Tab:Toggle(
+"Names",
+function(state)
+    Config.Visuals.NameEsp = state
+end
+)
+Esp_Tab:Toggle(
+"Show Crims",
+function(state)
+    Config.Visuals.ShowCrims = state
+end
+)
+Esp_Tab:Toggle(
+"Show Prisoners",
+function(state)
+    Config.Visuals.ShowPris = state
+end
+)
+Esp_Tab:Toggle(
+"Show Cops",
+function(state)
+    Config.Visuals.ShowCops = state
+end
+)
+
+--Esp Loader
+
+function Funcs:AddEsp(player)
+local Box = Funcs:DrawSquare()
+local Tracer = Funcs:DrawLine()
+local Name = Funcs:DrawText()
+Services.RunService.Stepped:Connect(
+    function()
+        if player.Character == nil or player.Character.Humanoid.Health == 0 then
+            Box.Visible = false
+            Tracer.Visible = false
+            Name.Visible = false
+        else
+            if player then
+                if player.Team.Name == "Police" then
+                    Box.Color = Config.Visuals.Police
+                    Tracer.Color = Config.Visuals.Police
+                    Name.Color = Config.Visuals.Police
+                end
+                if player.Team.Name == "Prisoner" then
+                    Box.Color = Config.Visuals.Prisoner
+                    Tracer.Color = Config.Visuals.Prisoner
+                    Name.Color = Config.Visuals.Prisoner
+                end
+                if player.Team.Name == "Criminal" then
+                    Box.Color = Config.Visuals.Criminal
+                    Tracer.Color = Config.Visuals.Criminal
+                    Name.Color = Config.Visuals.Criminal
+                end
+                if player.Character and player.Character:FindFirstChild("Head") then
+                    local RootPosition, OnScreen =
+                        Services.Camera:WorldToViewportPoint(player.Character.HumanoidRootPart.Position)
+                    local HeadPosition =
+                        Services.Camera:WorldToViewportPoint(
+                        player.Character.Head.Position + Vector3.new(0, 0.5, 0)
+                    )
+                    local LegPosition =
+                        Services.Camera:WorldToViewportPoint(
+                        player.Character.HumanoidRootPart.Position - Vector3.new(0, 4, 0)
+                    )
+                    if Config.Visuals.BoxEsp then
+                        tempYO = false
+                        if player.Team.Name == "Police" and Config.Visuals.ShowCops == true then
+                            Box.Visible = OnScreen
+                            tempYO = true
+                        end
+                        if player.Team.Name == "Prisoner" and Config.Visuals.ShowPris == true then
+                            Box.Visible = OnScreen
+                            tempYO = true
+                        end
+                        if player.Team.Name == "Criminal" and Config.Visuals.ShowCrims == true then
+                            Box.Visible = OnScreen
+                            tempYO = true
+                        end
+                        if tempYO == false then
+                            Box.Visible = false
+                        end
+                        Box.Size = Vector2.new((2350 / RootPosition.Z) + 2.5, HeadPosition.Y - LegPosition.Y)
+                        Box.Position =
+                            Vector2.new((RootPosition.X - Box.Size.X / 2) - 1, RootPosition.Y - Box.Size.Y / 2)
+                    else
+                        Box.Visible = false
+                    end
+                    if Config.Visuals.TracerEsp then
+                        tempYO = false
+                        if player.Team.Name == "Police" and Config.Visuals.ShowCops == true then
+                            Tracer.Visible = OnScreen
+                            tempYO = true
+                        end
+                        if player.Team.Name == "Prisoner" and Config.Visuals.ShowPris == true then
+                            Tracer.Visible = OnScreen
+                            tempYO = true
+                        end
+                        if player.Team.Name == "Criminal" and Config.Visuals.ShowCrims == true then
+                            Tracer.Visible = OnScreen
+                            tempYO = true
+                        end
+                        if tempYO == false then
+                            Tracer.Visible = false
+                        end
+                        Tracer.To = Vector2.new(Services.Camera.ViewportSize.X / 2, 0)
+                        Tracer.From =
+                            Vector2.new(
+                            Services.Camera:WorldToViewportPoint(player.Character.HumanoidRootPart.Position).X - 1,
+                            RootPosition.Y + (HeadPosition.Y - LegPosition.Y) / 2
+                        )
+                    else
+                        Tracer.Visible = false
+                    end
+                    if Config.Visuals.NameEsp then
+                        tempYO = false
+                        if player.Team.Name == "Police" and Config.Visuals.ShowCops == true then
+                            Name.Visible = OnScreen
+                            tempYO = true
+                        end
+                        if player.Team.Name == "Prisoner" and Config.Visuals.ShowPris == true then
+                            Name.Visible = OnScreen
+                            tempYO = true
+                        end
+                        if player.Team.Name == "Criminal" and Config.Visuals.ShowCrims == true then
+                            Name.Visible = OnScreen
+                            tempYO = true
+                        end
+                        if tempYO == false then
+                            Name.Visible = false
+                        end
+                        Name.Position =
+                            Vector2.new(
+                            Services.Camera:WorldToViewportPoint(player.Character.Head.Position).X,
+                            Services.Camera:WorldToViewportPoint(player.Character.HumanoidRootPart.Position).Y - 40
+                        )
+                        Name.Text = player.Name
+                    else
+                        Name.Visible = false
+                    end
+                else
+                    Box.Visible = false
+                    Tracer.Visible = false
+                    Name.Visible = false
+                end
+                if not player then
+                    Box.Visible = false
+                    Tracer.Visible = false
+                    Name.Visible = false
+                end
+            end
+        end
+    end
+)
+end
+
+for i, v in pairs(Services.Players:GetPlayers()) do
+if v ~= Services.LocalPlayer then
+    Funcs:AddEsp(v)
+end
+end
+
+Services.Players.PlayerAdded:Connect(
+function(player)
+    if v ~= Services.LocalPlayer then
+        Funcs:AddEsp(player)
+    end
+end
+)
+
+wait(0.3)
+Notif('FopeHub Injected...',5)
+
+
+
+
