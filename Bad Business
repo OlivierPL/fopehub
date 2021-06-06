@@ -1,0 +1,365 @@
+pcall(function()
+
+--Load UI
+local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/OlivierPL/FopeUiLib/main/FopeHubUI"))()
+main = lib:Window()
+MainWindow = main:Tab('Main')
+Esp = main:Tab('Esp')
+
+--Client
+
+Client = {
+    Toggles = {
+        SilentAim = false,
+        FOV = false,
+        NoRecoil = false,
+        Fly = false
+    },
+    Visuals = {
+        BoxEsp = false,
+        TracerEsp = false,
+        Names = false,
+        TeamCheck = true,
+        EnemyColor = Color3.fromRGB(255,0,0),
+        TeamColor = Color3.fromRGB(0,255,0),
+        ShowTeam = false
+    },
+    Values = {
+        AimPart = "Head",
+        FOV = 100
+    }
+}
+
+--Create UI
+MainWindow:Toggle('Silent Aim',function(state)
+    Client.Toggles.SilentAim = state
+end)
+MainWindow:Toggle('Wallbang',function(state)
+    local Raycast = require(game:GetService("ReplicatedStorage").TS).Raycast
+    if state == true then
+        debug.setupvalue(Raycast.CastGeometryAndEnemies, 1, nil)
+        debug.setupvalue(Raycast.CastGeometryAndEnemies, 2, nil)
+    else
+        debug.setupvalue(Raycast.CastGeometryAndEnemies, 1, game:GetService('Workspace').Geometry)
+        debug.setupvalue(Raycast.CastGeometryAndEnemies, 2, game:GetService('Workspace').Terrain)
+    end
+end)
+MainWindow:Toggle('FOV Visible',function(state)
+    Client.Toggles.FOV = state
+end)
+MainWindow:Slider('FOV',15,300,function(num)
+    Client.Values.FOV = num
+end)
+MainWindow:Dropdown('BodyPart',{'Chest','Head'},function(Sele)
+    Client.Values.AimPart = Sele
+end)
+
+MainWindow:Label('Gun Mods')
+MainWindow:Toggle('No Recoil',function(state)
+    Client.Toggles.NoRecoil = state
+end)
+
+MainWindow:Label('Local-Player')
+MainWindow:Toggle('Fly',function(state)
+    Client.Toggles.Fly = state
+end)
+game:GetService('UserInputService').InputBegan:connect(function(key, gpe)
+    if key.KeyCode == Enum.KeyCode.LeftShift then
+        Temp_Up = true
+    end
+    if key.KeyCode == Enum.KeyCode.LeftControl then
+        Temp_Down = true
+    end
+end)
+game:GetService('UserInputService').InputEnded:connect(function(key, gpe)
+    if key.KeyCode == Enum.KeyCode.LeftShift then
+        Temp_Up = false
+    end
+    if key.KeyCode == Enum.KeyCode.LeftControl then
+        Temp_Down = false
+    end
+end)
+Main = require(game:GetService("ReplicatedStorage"):WaitForChild("TS"));
+spawn(function()
+    while true do
+        wait()
+        pcall(function()
+            if Client.Toggles.Fly == true then
+                game:GetService("Workspace").Gravity = 0
+                Me = Main.Characters:GetCharacter(game.Players.LocalPlayer)
+                if Temp_Up == true then
+                    Me.Root.Velocity = Vector3.new(0,40,0)
+                end
+                if Temp_Down == true then
+                    Me.Root.Velocity = Vector3.new(0,-40,0)
+                end
+                if Temp_Down == false and Temp_Up == false then
+                    if Me.Root.Velocity.Y ~= 0 then
+                        Me.Root.Velocity = Vector3.new(0,0,0)
+                    end
+                end
+            else
+                game:GetService("Workspace").Gravity = 196.19999694824 
+            end
+        end)
+    end
+end)
+
+--FOV
+local FOVCircle = Drawing.new("Circle")
+FOVCircle.Thickness = 2
+FOVCircle.NumSides = 460
+FOVCircle.Filled = false
+FOVCircle.Transparency = 0.6
+FOVCircle.Radius = Client.Values.FOV
+FOVCircle.Color = Color3.new(0,255,0)
+
+--Framework
+local localPlayer = game:GetService("Players").LocalPlayer
+local currentCamera = game:GetService("Workspace").CurrentCamera
+local Mouse = localPlayer:GetMouse()
+Main = require(game:GetService("ReplicatedStorage"):WaitForChild("TS"));
+function GetCharacters()
+    temptable = {}
+        for i,v in pairs(game.Players:GetPlayers()) do
+            if v.Name ~= game.Players.LocalPlayer.Name and Main.Teams:GetPlayerTeam(v) ~= Main.Teams:GetPlayerTeam(game.Players.LocalPlayer) then
+                temp2 = Main.Characters:GetCharacter(v)
+                table.insert(temptable,temp2)
+            end
+        end
+    return temptable
+end
+function getClosestPlayerToCursor() 
+    local closestPlayer = nil
+    local shortestDistance = math.huge
+        for i, v in pairs(GetCharacters()) do
+            local pos = currentCamera:WorldToViewportPoint(v.Body.Head.Position)
+            local magnitude = (Vector2.new(pos.X, pos.Y) - Vector2.new(Mouse.X, Mouse.Y)).magnitude
+            if magnitude < shortestDistance and magnitude <= Client.Values.FOV then
+                closestPlayer = v
+                shortestDistance = magnitude
+            end
+        end  
+    return closestPlayer
+end
+game:GetService("RunService").Stepped:Connect(function()
+    FOVCircle.Position = game:GetService('UserInputService'):GetMouseLocation()
+    FOVCircle.Radius = Client.Values.FOV
+    if Client.Toggles.FOV == true then
+        FOVCircle.Visible = true
+    else
+        FOVCircle.Visible = false
+    end
+end)
+
+Main = require(game:GetService("ReplicatedStorage"):WaitForChild("TS"));
+Camera =  game.Workspace.CurrentCamera
+Main.Input.Reticle.LookVector = function()
+    if Client.Toggles.SilentAim == false then
+        return game.Workspace.CurrentCamera.CFrame.LookVector
+    end
+    x = nil
+    target = nil
+    pcall(function()
+        target = getClosestPlayerToCursor()
+    end)
+    if target == nil then
+        return game.Workspace.CurrentCamera.CFrame.LookVector
+    end
+    Camera = game.Workspace.CurrentCamera
+    xt = target
+    Camera  = {
+        CFrame = CFrame.new(Camera.CFrame.p,xt.Body[Client.Values.AimPart].Position)
+    }
+    x = (Camera.CFrame).LookVector
+    if not xt:FindFirstChild('Body') or not xt.Body:FindFirstChild(Client.Values.AimPart) or x == nil then
+        return game.Workspace.CurrentCamera.CFrame.LookVector
+    end
+    if x ~= nil then
+        return x
+    else
+        return game.Workspace.CurrentCamera.CFrame.LookVector
+    end
+end
+OldRecoil = Main.Camera.Recoil.Fire
+Main.Camera.Recoil.Fire =  function(self, name, ...)
+    local args = {...}
+    if Client.Toggles.NoRecoil then
+        return nil
+    else
+        return OldRecoil(self, name, unpack(args))
+    end
+end
+
+OldShoot = Main.Network.Fire
+Main.Network.Fire = function(...)
+    local args = {...};
+    if tostring(args[1]) == 'Admin' or tostring(args[2]) == 'Admin' then
+        return
+    end
+    return OldShoot(...)
+end
+
+Esp:Toggle('Boxes',function(state)
+    Client.Visuals.BoxEsp = state
+end)
+  
+Esp:Toggle('Tracers',function(state)
+    Client.Visuals.TracerEsp = state
+end)
+
+Esp:Toggle('Names',function(state)
+    Client.Visuals.NameEsp = state
+end)
+Esp:Toggle('Show Team',function(state)
+    Client.Visuals.ShowTeam = state
+end)
+
+function DrawSquare()
+    local Box = Drawing.new("Square")
+    Box.Color = Color3.fromRGB(190, 190, 0)
+    Box.Thickness = 0.5
+    Box.Filled = false
+    Box.Transparency = 1
+    return Box
+end
+
+function DrawLine()
+    local line = Drawing.new("Line")
+    line.Color = Color3.new(190, 190, 0)
+    line.Thickness = 0.5
+    return line
+end
+
+function DrawText()
+    local text = Drawing.new("Text")
+    text.Color = Color3.fromRGB(190, 190, 0)
+    text.Size = 20
+    text.Outline = true
+    text.Center = true
+    return text
+end
+
+--Esp Loader
+
+function AddEsp(player)
+    local Box = DrawSquare()
+    local Tracer = DrawLine()
+    local Name = DrawText()
+    game:GetService('RunService').Stepped:Connect(function()
+        pcall(function()
+            if Main.Characters:GetCharacter(player) == nil or Main.Characters:GetCharacter(player).Health.Value == 0 then
+                Box.Visible = false
+                Tracer.Visible = false
+                Name.Visible = false
+            else
+                if Client.Visuals.ShowTeam then
+                    if Client.Visuals.TeamCheck and Main.Teams:GetPlayerTeam(player) == Main.Teams:GetPlayerTeam(game.Players.LocalPlayer) then
+                        Box.Color = Client.Visuals.TeamColor
+                        Tracer.Color = Client.Visuals.TeamColor
+                        Name.Color = Client.Visuals.TeamColor
+                    else
+                        Box.Color = Client.Visuals.EnemyColor
+                        Tracer.Color = Client.Visuals.EnemyColor
+                        Name.Color = Client.Visuals.EnemyColor
+                    end
+                    if Main.Characters:GetCharacter(player).Body:FindFirstChild("Chest") and player.InMenu.Value == false then
+                        local RootPosition, OnScreen = game.Workspace.CurrentCamera:WorldToViewportPoint(Main.Characters:GetCharacter(player).Body.Chest.Position)
+                        local HeadPosition = game.Workspace.CurrentCamera:WorldToViewportPoint(Main.Characters:GetCharacter(player).Body.Head.Position + Vector3.new(0, 0.5, 0))
+                        local LegPosition = game.Workspace.CurrentCamera:WorldToViewportPoint(Main.Characters:GetCharacter(player).Body.Chest.Position - Vector3.new(0, 4, 0))
+                        if Client.Visuals.BoxEsp then
+                            Box.Visible = OnScreen
+                            Box.Size = Vector2.new((2350 / RootPosition.Z) + 2.5, HeadPosition.Y - LegPosition.Y)
+                            Box.Position = Vector2.new((RootPosition.X - Box.Size.X / 2) - 1, RootPosition.Y - Box.Size.Y / 2)
+                        else
+                            Box.Visible = false
+                        end
+                        if Client.Visuals.TracerEsp then
+                            Tracer.Visible = OnScreen
+                            Tracer.To = Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X / 2, 1000)
+                            Tracer.From = Vector2.new(game.Workspace.CurrentCamera:WorldToViewportPoint(Main.Characters:GetCharacter(player).Body.Chest.Position).X - 1, RootPosition.Y - (HeadPosition.Y - LegPosition.Y) / 2)
+                        else
+                            Tracer.Visible = false
+                        end
+                        if Client.Visuals.NameEsp then
+                            Name.Visible = OnScreen
+                            Name.Position = Vector2.new(game.Workspace.CurrentCamera:WorldToViewportPoint(Main.Characters:GetCharacter(player).Body.Head.Position).X, game.Workspace.CurrentCamera:WorldToViewportPoint(Main.Characters:GetCharacter(player).Body.Head.Position).Y - 40)
+                            Name.Text = player.Name
+                        else
+                            Name.Visible = false
+                        end
+                    else
+                        Box.Visible = false
+                        Tracer.Visible = false
+                        Name.Visible = false
+                    end
+                    if not player then
+                        Box.Visible = false
+                        Tracer.Visible = false
+                        Name.Visible = false
+                    end
+                else
+                    if Main.Teams:GetPlayerTeam(player) == Main.Teams:GetPlayerTeam(game.Players.LocalPlayer) then
+                        Box.Visible = false
+                        Tracer.Visible = false
+                        Name.Visible = false
+                    end
+                    if Client.Visuals.TeamCheck and Main.Teams:GetPlayerTeam(player) ~= Main.Teams:GetPlayerTeam(game.Players.LocalPlayer) then
+                        Box.Color = Client.Visuals.EnemyColor
+                        Tracer.Color = Client.Visuals.EnemyColor
+                        Name.Color = Client.Visuals.EnemyColor
+                        if Main.Characters:GetCharacter(player).Body:FindFirstChild("Chest") and player.InMenu.Value == false then
+                        local RootPosition, OnScreen = game.Workspace.CurrentCamera:WorldToViewportPoint(Main.Characters:GetCharacter(player).Body.Chest.Position)
+                        local HeadPosition = game.Workspace.CurrentCamera:WorldToViewportPoint(Main.Characters:GetCharacter(player).Body.Head.Position + Vector3.new(0, 0.5, 0))
+                        local LegPosition = game.Workspace.CurrentCamera:WorldToViewportPoint(Main.Characters:GetCharacter(player).Body.Chest.Position - Vector3.new(0, 4, 0))
+                        if Client.Visuals.BoxEsp then
+                            Box.Visible = OnScreen
+                            Box.Size = Vector2.new((2350 / RootPosition.Z) + 2.5, HeadPosition.Y - LegPosition.Y)
+                            Box.Position = Vector2.new((RootPosition.X - Box.Size.X / 2) - 1, RootPosition.Y - Box.Size.Y / 2)
+                        else
+                            Box.Visible = false
+                        end
+                        if Client.Visuals.TracerEsp then
+                            Tracer.Visible = OnScreen
+                            Tracer.To = Vector2.new(game.Workspace.CurrentCamera.ViewportSize.X / 2, 1000)
+                            Tracer.From = Vector2.new(game.Workspace.CurrentCamera:WorldToViewportPoint(Main.Characters:GetCharacter(player).Body.Chest.Position).X - 1, RootPosition.Y - (HeadPosition.Y - LegPosition.Y) / 2)
+                        else
+                            Tracer.Visible = false
+                        end
+                        if Client.Visuals.NameEsp then
+                            Name.Visible = OnScreen
+                            Name.Position = Vector2.new(game.Workspace.CurrentCamera:WorldToViewportPoint(Main.Characters:GetCharacter(player).Body.Head.Position).X, game.Workspace.CurrentCamera:WorldToViewportPoint(Main.Characters:GetCharacter(player).Body.Head.Position).Y - 40)
+                            Name.Text = player.Name
+                        else
+                            Name.Visible = false
+                        end
+                    else
+                        Box.Visible = false
+                        Tracer.Visible = false
+                        Name.Visible = false
+                    end
+                        if not player then
+                            Box.Visible = false
+                            Tracer.Visible = false
+                            Name.Visible = false
+                        end
+                    end
+                end
+            end
+        end)
+    end)
+end
+  
+for i, v in pairs(game:GetService('Players'):GetPlayers()) do
+    if v ~= game:GetService('Players').LocalPlayer then
+        AddEsp(v)
+    end
+end
+  
+game:GetService('Players').PlayerAdded:Connect(function(player)
+    if v ~= game:GetService('Players').LocalPlayer then
+        AddEsp(player)
+    end
+end)
+end)
+
