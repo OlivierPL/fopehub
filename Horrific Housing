@@ -1,0 +1,74 @@
+--Horrific Housing Script Here///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+if game.CoreGui:FindFirstChild("FopeHub") then 
+game.CoreGui.FopeHub:Destroy()
+end
+
+local yes = game:GetService("ReplicatedStorage").WinnerUi:Clone()
+yes.Frame.Left.Title.Text = "Fope"
+yes.Frame.Right.Title.Text = "Hub"
+yes.Parent = game.Players.LocalPlayer.PlayerGui
+repeat wait() until yes.Parent == nil
+
+local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/OlivierPL/FopeUiLib/main/FopeHubUI"))()
+main = lib:Window()
+local Farming = main:Tab("Main")
+t_Farm = false
+Farming:Toggle('AutoFarm',function(state)
+t_Farm = state
+end)
+Farming:Button('Free Grand Prize',function()
+game:GetService("ReplicatedStorage").GiveGrandPrize:FireServer()
+end)
+Farming:Button('Get Potion',function()
+game.ReplicatedStorage.EventRemotes.Potion:FireServer("Pass")
+game.ReplicatedStorage.EventRemotes.Potion:FireServer("Drink")
+end)
+Farming:Button('Goto Lobby',function()
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0.0262833498, 7.88768053, -7.52940941, 0.999931633, 0.000497492729, 0.0116874278, -2.32248567e-08, 0.99909538, -0.0425250307, -0.0116980113, 0.0425221287, 0.999027133)
+end)
+
+spawn(function()
+while true do
+    wait(0.2)
+    if t_Farm == true then
+    local v1 = "MiissionSuccess3"
+    local rem = game:GetService("ReplicatedStorage").EventRemotes.GhasterBlaster
+    rem:FireServer(v1)
+    rem:FireServer(v1)
+    rem:FireServer(v1)
+    end
+end        
+end)
+local Extra = main:Tab("Other") 
+
+local Extras = main:Tab("LocalPlayer")
+Extras:Slider("WalkSpeed",16,100, function(Value) game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value end)
+Extras:Slider("JumpPower",50,100, function(Value) game.Players.LocalPlayer.Character.Humanoid.JumpPower = Value end)
+pets = {}
+for i,v in pairs(game:GetService("ReplicatedStorage").Pets:GetChildren()) do
+table.insert(pets,v.Name)
+end
+
+Extra:Label('Free Pets')
+Extra:Dropdown("Free Pet", pets,function(NAMEERR)
+if NAMEERR ~= 'Pet' then
+    game.ReplicatedStorage.PetChange:FireServer(NAMEERR)
+end
+end)
+
+Extra:Button('Rebirth',function()
+game:GetService("ReplicatedStorage").Rebirth:FireServer()
+end)
+Extra:Button('Pick Up Card',function()
+game.workspace.InteractionObjects.CardPickUp.Interact.Interaction:FireServer()
+end)
+Extra:Button('Destroy Spleef',function()
+for _,v in pairs(game:GetService("Workspace").Spleef:GetDescendants()) do
+    if v:IsA("TouchTransmitter") then
+    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 0) --0 is touch
+    wait()
+    firetouchinterest(game.Players.LocalPlayer.Character.HumanoidRootPart, v.Parent, 1) -- 1 is untouch
+    end
+end
+end)
+
