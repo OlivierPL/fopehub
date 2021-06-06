@@ -1,0 +1,183 @@
+--Sound Space Script Here/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/OlivierPL/FopeUiLib/main/FopeHubUI"))()
+main = lib:Window()
+Notif = getsenv(game.Players.LocalPlayer.PlayerScripts.SpecialMessageHandler).Announce
+localPlayer = game:GetService("Players").LocalPlayer
+currentCamera = game:GetService("Workspace").CurrentCamera
+Mouse = localPlayer:GetMouse()
+CameraLock = false
+v_TweenV = 0
+MainScript = getsenv(game.ReplicatedFirst.GameScript)
+VRModule = require(game.ReplicatedFirst.VR.VRModule)
+LockValue = CFrame.new(Vector3.new(7, 3, 0) +  Vector3.new(0.1, 0, 0)) * CFrame.Angles(0, math.pi / 2, 0)
+local TweenValue = Instance.new("CFrameValue")
+TweenValue.Value = CFrame.new(Vector3.new(7, 3, 0) +  Vector3.new(0.1, 0, 0)) * CFrame.Angles(0, math.pi / 2, 0)
+
+local UserInputService = game:GetService("UserInputService")
+Main = main:Tab('Sound Space')
+
+Main:Keybind(
+"AutoPlay",Enum.KeyCode.E,
+function()
+    t_Status = not t_Status
+    if t_Status == true then
+        Notif({Msg = "Enabled", Img = "TominoCZ"})
+    else
+        Notif({Msg = "Disabled", Img = "TominoCZ"})
+    end
+end
+)
+Main:Toggle('Camera Lock',function(state)
+CameraLock = state
+end)
+Main:Slider('Smoothness',0,2,function(num)
+v_TweenV = num
+end)
+t_Trail = false
+Main:Toggle('Cursor Trail',function(state)
+t_Trail = state
+end)
+oldColor = getfenv(require(game:GetService("ReplicatedFirst").GameScript).CursorTrail)._G.PlayerData.Inventory.CursorColors.Equipped
+t_rainbow = false
+Main:Toggle('Rainbow Cursor',function(state)
+t_rainbow = state
+end)
+Main:Toggle('No Fail',function(state)
+game:GetService("Players").LocalPlayer.MapData.Mods.NoFail.Value = state
+end)
+spawn(function()
+while wait() do
+    getfenv(require(game:GetService("ReplicatedFirst").GameScript).CursorTrail)._G.PlayerData.Settings.CursorTrail = t_Trail
+    if t_rainbow == true then
+        getfenv(require(game:GetService("ReplicatedFirst").GameScript).CursorTrail)._G.PlayerData.Inventory.CursorColors.Equipped = 11
+    else
+        getfenv(require(game:GetService("ReplicatedFirst").GameScript).CursorTrail)._G.PlayerData.Inventory.CursorColors.Equipped = oldColor
+    end
+end
+end)
+local Camera = game.workspace.CurrentCamera
+local Player = game.Players.LocalPlayer
+t_Status = false
+Tab_Cubes = {}
+
+game.Workspace.DescendantAdded:Connect(function(v)
+if v:IsA("Part") and v:FindFirstChildOfClass('Color3Value') and v:FindFirstChildOfClass('SelectionBox') then
+    table.insert(Tab_Cubes,v)
+end
+end)
+
+function CleanUp()
+for i,v in pairs(Tab_Cubes) do
+    if v.Parent == nil then
+        table.remove(Tab_Cubes,i)
+    end
+end
+end
+
+function getClosestCube()
+local closestCube = nil
+local shortestDistance = math.huge
+
+if Tab_Cubes then
+    for i, v in pairs(Tab_Cubes) do
+        if Camera and v.Parent ~= nil then
+            local magnitude = (v.Position - Camera.CFrame.p).magnitude
+            if magnitude < shortestDistance then
+                closestCube = v
+                shortestDistance = magnitude
+            end
+        end
+    end
+end
+
+return closestCube
+end
+
+
+game:GetService('RunService').Heartbeat:connect(function()
+CleanUp()
+if t_Status and not CameraLock then
+    if getClosestCube() ~= nil then
+        magnitude = (getClosestCube().Position - Camera.CFrame.p).magnitude
+        --game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(magnitude / 250, Enum.EasingStyle.Linear), {CFrame = CFrame.new(workspace.CurrentCamera.CFrame.p, Vector3.new(0, getClosestCube().Position.Y,  getClosestCube().Position.Z))}):Play()
+        if v_TweenV == 0 then
+            game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(0.01, Enum.EasingStyle.Linear), {CFrame = CFrame.new(workspace.CurrentCamera.CFrame.p, Vector3.new(0, getClosestCube().Position.Y,  getClosestCube().Position.Z))}):Play()
+        end
+        if v_TweenV == 1 then
+            game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(magnitude / 700, Enum.EasingStyle.Linear), {CFrame = CFrame.new(workspace.CurrentCamera.CFrame.p, Vector3.new(0, getClosestCube().Position.Y,  getClosestCube().Position.Z))}):Play()
+        end
+        if v_TweenV == 2 then
+            game:GetService("TweenService"):Create(workspace.CurrentCamera, TweenInfo.new(magnitude / 250, Enum.EasingStyle.Linear), {CFrame = CFrame.new(workspace.CurrentCamera.CFrame.p, Vector3.new(0, getClosestCube().Position.Y,  getClosestCube().Position.Z))}):Play()
+        end
+    end
+end
+if t_Status and CameraLock then
+    if getClosestCube() ~= nil then
+        magnitude = (getClosestCube().Position - Camera.CFrame.p).magnitude
+        if v_TweenV == 0 then
+            game:GetService("TweenService"):Create(TweenValue, TweenInfo.new(0.01, Enum.EasingStyle.Linear), {Value = CFrame.new(Camera.CFrame.p, Vector3.new(0, getClosestCube().Position.Y, getClosestCube().Position.Z))}):Play()
+        end
+        if v_TweenV == 1 then
+            game:GetService("TweenService"):Create(TweenValue, TweenInfo.new(magnitude / 700, Enum.EasingStyle.Linear), {Value = CFrame.new(Camera.CFrame.p, Vector3.new(0, getClosestCube().Position.Y, getClosestCube().Position.Z))}):Play()
+        end
+        if v_TweenV == 2 then
+            game:GetService("TweenService"):Create(TweenValue, TweenInfo.new(magnitude / 250, Enum.EasingStyle.Linear), {Value = CFrame.new(Camera.CFrame.p, Vector3.new(0, getClosestCube().Position.Y, getClosestCube().Position.Z))}):Play()
+        end
+    end
+end
+end)
+
+function IsPlaying()
+if game.Players.LocalPlayer.MapData.Playing.Value or getClosestCube() ~= nil then
+    return true
+else
+    return false
+end
+end
+
+debug.setupvalue(MainScript.UpdateSaber, 1, function()
+if CameraLock and not t_Status and IsPlaying() then
+    local camera = workspace.CurrentCamera
+    camera.CameraType = Enum.CameraType.Scriptable 
+    return CFrame.new(Camera.CFrame.Position, Mouse.Hit.Position)
+end
+if CameraLock and t_Status and IsPlaying() then
+    local camera = workspace.CurrentCamera
+    camera.CameraType = Enum.CameraType.Scriptable
+    camera.CFrame = LockValue
+    if getClosestCube() ~= nil and IsPlaying() then
+        if v_TweenV == 0 then
+            return CFrame.new(Camera.CFrame.Position, getClosestCube().Position)
+        end
+        return TweenValue.Value
+    else
+        return(Camera.CFrame)
+    end
+end
+if not CameraLock and not IsPlaying() then
+    Camera.CameraType = "Track"
+    UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
+    return(Camera.CFrame)
+end
+if IsPlaying() and not CameraLock then
+    Camera.CameraType = "Track"
+    UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
+    return(Camera.CFrame)
+end
+if not CameraLock then
+    Camera.CameraType = "Track"
+    UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
+    return(Camera.CFrame)
+end
+end)
+--MainScript.ResetCamera()
+function SpoofCamera()
+return CFrame.new(Camera.CFrame.Position, Mouse.Hit.Position)
+end
+VRModule.GetWorldCFrame = SpoofCamera
+
+Notif({Msg = "FopeHub Loaded", Img = "TominoCZ"})
+
+
+
