@@ -1,0 +1,41 @@
+nouni=false
+local function lo(l)
+loadstring(game:HttpGet(l,true))()
+nouni=true
+end
+if game.PlaceId==286090429 then
+lo("https://raw.githubusercontent.com/OlivierPL/fopehub/main/Arsenal")
+end
+if game.PlaceId==292439477 then
+lo("https://raw.githubusercontent.com/OlivierPL/fopehub/main/Phantom%20Forces")
+end
+if game.PlaceId==1962086868 then
+lo("https://raw.githubusercontent.com/OlivierPL/fopehub/main/Tower%20of%20Hell")
+end
+if game.PlaceId==3233893879 then
+lo("https://raw.githubusercontent.com/OlivierPL/fopehub/main/Bad%20Business")
+end
+if game.PlaceId==3527629287 then
+lo("https://raw.githubusercontent.com/OlivierPL/fopehub/main/Big%20Paintball")
+end
+if game.PlaceId==3101667897 then
+lo("https://raw.githubusercontent.com/OlivierPL/fopehub/main/Legends%20Of%20Speed")
+end
+if game.PlaceId==263761432 then
+lo("https://raw.githubusercontent.com/OlivierPL/fopehub/main/Horrific%20Housing")
+end
+if game.PlaceId==606849621 then
+lo("https://raw.githubusercontent.com/OlivierPL/fopehub/main/JailBreak")
+end
+if game.PlaceId==2041312716 then
+lo("https://raw.githubusercontent.com/OlivierPL/fopehub/main/Ragdoll%20Engine")
+end
+if game.PlaceId==2677609345 then
+lo("https://raw.githubusercontent.com/OlivierPL/fopehub/main/Sound%20Space")
+end
+if game.PlaceId==2377868063 then
+lo("https://raw.githubusercontent.com/OlivierPL/fopehub/main/Strucid")
+end
+if nouni==false then
+lo("https://raw.githubusercontent.com/inceldom/kinx/main/uni")
+end
