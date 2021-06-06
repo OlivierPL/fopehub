@@ -749,27 +749,3 @@ end))
 
 
 
-
-
---Tilty Tokens
-local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/OlivierPL/FopeUiLib/main/FopeHubUI"))()
-main = lib:Window()
-local w = main:Tab('FopeHub')
-w:Button("Complete Level", function()
-for i,v in pairs(workspace.Camera.Board.Pins:GetChildren()) do
-    child.Parent = workspace
-    child.Name = "OldPin"
-end
-keypress(0x41)
-wait(.026)
-keyrelease(0x41)
-wait(2)
-for i, v in pairs(workspace:GetChildren()) do
-    if v.Name == "OldPin" then
-        v:Destroy()
-    end
-end
-end)
-
-
-
