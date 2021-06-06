@@ -1,0 +1,223 @@
+--Ragdoll Engine Script Here////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/OlivierPL/FopeUiLib/main/FopeHubUI"))()
+
+local main = lib:CreateMain()
+
+local Main = main:CreateWindow("Server")
+local LPWIN = main:CreateWindow("LocalPlayer")
+
+Client = {
+Toggles = {
+    NoRagDoll = false,
+    BombAll = false
+}
+}
+
+local lib = loadstring(game:HttpGet("https://raw.githubusercontent.com/OlivierPL/FopeUiLib/main/FopeHubUI", true))()
+local lib2 = loadstring(game:HttpGet("https://raw.githubusercontent.com/OlivierPL/FopeUiLib/main/FopeHubUI", true))()
+function Info(Text)
+lib:Notify("[ INFO ] : "..Text)
+end
+function Error(Text)
+local colour = "fa34f7" -- Hex Type
+lib2:Notify("[ ERROR ] : "..Text, "0x" .. colour)
+end
+
+function BombRemote()
+temp_bombs = {}
+for i,v in pairs(game:GetService('Players'):GetPlayers()) do
+    if v:FindFirstChild('Backpack') and v.Backpack:FindFirstChild('ImpulseGrenade') then
+        table.insert(temp_bombs,v.Backpack.ImpulseGrenade.CreateGrenade)
+    end
+end
+return temp_bombs[math.random(1,#temp_bombs)]
+end
+function InvisRemote()
+temp_bombs = {}
+for i,v in pairs(game:GetService('Players'):GetPlayers()) do
+    if v:FindFirstChild('Backpack') and v.Backpack:FindFirstChild('OddPotion') then
+        table.insert(temp_bombs,v.Backpack.OddPotion.TransEvent)
+    end
+end
+return temp_bombs[math.random(1,#temp_bombs)]
+end
+function PotionRemote()
+temp_bombs = {}
+for i,v in pairs(game:GetService('Players'):GetPlayers()) do
+    if v:FindFirstChild('Backpack') and v.Backpack:FindFirstChild('OddPotion') then
+        table.insert(temp_bombs,v.Backpack.OddPotion.PotionEvent)
+    end
+end
+return temp_bombs[math.random(1,#temp_bombs)]
+end
+
+function BombAll()
+pcall(function()
+    if not BombRemote() then
+        Error('Failed To Fetch Remote')
+    end
+    for i = 1,3 do
+        for i,v in pairs(game:GetService('Players'):GetPlayers()) do
+            if v ~= game.Players.LocalPlayer then    
+                local v1 = Vector3.new(0, 0, 0)
+                local v2 = v.Character.Head.CFrame
+                local rem = BombRemote()
+                rem:FireServer(v1, v2)
+            end
+        end
+    end
+end)
+end
+
+local getname = function(str)
+for i,v in next, game:GetService("Players"):GetChildren() do
+    if string.find(string.lower(v.Name), string.lower(str)) then
+        return v.Name
+    end
+end
+end
+
+LPWIN:Slider('Walkspeed',function(num)
+game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = num
+end,{min=16,max=500})
+LPWIN:Slider('JumpPower',function(num)
+game.Players.LocalPlayer.Character.Humanoid.JumpPower = num
+end,{min=50,max=500})
+LPWIN:Toggle('No Ragdoll',function(state)
+Client.Toggles.NoRagDoll = state
+end)
+LPWIN:Button('Drink Weird Potion',function()
+if not PotionRemote() then
+    Error('Failed To Fetch Remote')
+    return
+end
+local rem = PotionRemote()
+rem:FireServer()
+end)
+LPWIN:TextBox('Goto','Name',function(Text)
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService('Players')[getname(Text)].Character.Head.CFrame
+end)
+Main:TextBox('Bomb','Name',function(Text)
+for i = 1,3 do
+    for i,v in pairs(game:GetService('Players'):GetPlayers()) do
+        if v == game:GetService('Players')[getname(Text)] then    
+            local v1 = Vector3.new(0, 0, 0)
+            local v2 = v.Character.Head.CFrame
+            local rem = BombRemote()
+            rem:FireServer(v1, v2)
+        end
+    end
+end
+end)
+Main:Button('Bomb All',function()
+BombAll()
+end)
+Main:Toggle('Loop Bomb All',function(state)
+Client.Toggles.BombAll = state
+end)
+Main:Toggle('Invisible Me',function(state)
+if not InvisRemote() then
+    Error('Failed To Fetch Remote')
+    return
+end
+if state == true then
+    for i,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+        if v.Name ~= 'HumanoidRootPart' then
+            local v1 = v
+            local v2 = 1
+            local rem = InvisRemote()
+            rem:FireServer(v1, v2)
+        end
+    end
+else
+    for i,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+        if v.Name ~= 'HumanoidRootPart' then
+            local v1 = v
+            local v2 = 0
+            local rem = InvisRemote()
+            rem:FireServer(v1, v2)
+        end
+    end
+end
+end)
+Main:Button('Ghost Me',function(state)
+for i,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+    if v.Name ~= 'HumanoidRootPart' then
+        local v1 = v
+        local v2 = 0.6
+        local rem = InvisRemote()
+        rem:FireServer(v1, v2)
+    end
+end
+end)
+Main:Button('Invisible All Players',function()
+pcall(function()
+    for i,v in pairs(game.Players:GetPlayers()) do
+        wait()
+        for i,v in pairs(v.Character:GetDescendants()) do
+            if v.Name ~= 'HumanoidRootPart' then
+                local v1 = v
+                local v2 = 1
+                local rem = InvisRemote()
+                rem:FireServer(v1, v2)
+            end
+        end
+    end
+end)
+end)
+Main:Button('Visible All Players',function()
+pcall(function()
+    for i,v in pairs(game.Players:GetPlayers()) do
+        wait()
+        for i,v in pairs(v.Character:GetDescendants()) do
+            if v.Name ~= 'HumanoidRootPart' then
+                local v1 = v
+                local v2 = 0
+                local rem = InvisRemote()
+                rem:FireServer(v1, v2)
+            end
+        end
+    end
+end)
+end)
+Main:Button('Invisible Map',function()
+for i,v in pairs(game.Workspace:GetDescendants()) do
+    if v:IsA('Part') or v:IsA('BasePart') and v.Name ~= 'HumanoidRootPart' then
+        local v1 = v
+        local v2 = 1
+        local rem = InvisRemote()
+        rem:FireServer(v1, v2)
+    end
+end
+end)
+Main:Button('Visible Map',function()
+for i,v in pairs(game.Workspace:GetDescendants()) do
+    if v:IsA('Part') or v:IsA('BasePart') and v.Name ~= 'HumanoidRootPart' then
+        local v1 = v
+        local v2 = 0
+        local rem = InvisRemote()
+        rem:FireServer(v1, v2)
+    end
+end
+end)
+game:GetService("RunService").RenderStepped:Connect(function()
+if Client.Toggles.NoRagDoll == true then
+    game:GetService("Players").LocalPlayer.Character["Local Ragdoll"].Disabled = true
+else
+    game:GetService("Players").LocalPlayer.Character["Local Ragdoll"].Disabled = false
+end
+end)
+
+spawn(function()
+while true do
+    wait(3.2)
+    pcall(function()
+        if Client.Toggles.BombAll == true then
+            BombAll()
+        end
+    end)
+end
+end)
+
+
+
